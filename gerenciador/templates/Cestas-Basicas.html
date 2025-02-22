@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="mb-4">Buscar cestas básicas</h2>
+        <form method="get" action="{% url 'cestas_basicas' %}">
+            <input type="text" name="q" placeholder="Digite o nome da Cesta_Basica" value="{{ query }}">
+            <button type="submit">Buscar</button>
+        </form>
+    
+        {% if Cestas_Basicas %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>nome</th>
+                        <th>Quantidade Arrecadadas</th>
+                        <th>Quantidade doadas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Cesta_Basica in Cestas_Basicas %}
+                        <tr>
+                            <td>{{ Cesta_Basica.nome }}</td>
+                            <td>{{ Cesta_Basica.Quant_Arrecadadas }}</td>
+                            <td>{{ Cesta_Basica.Quant_doadas }}</td>
+
+                            <td>
+                                <a href="{% url 'editar_Cesta_Basica' Cesta_Basica.id_Cesta %}" class="btn btn-warning btn-sm">Editar</a>
+                                <a href="{% url 'deletar_Cesta_Basica' Cesta_Basica.id_Cesta %}" class="btn btn-danger btn-sm">Deletar</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-muted">Nenhuma modelo de cesta básica cadastrada cadastrada.</p>
+        {% endif %}
+        <a href="{% url 'criar_Cesta_Basica' %}" class="btn btn-success mb-3">Adicionar Nova Cesta</a>
+
+    </div>
+{% endblock %}

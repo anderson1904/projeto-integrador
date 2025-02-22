@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Editar Campanha</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="titulo" class="form-label">Título</label>
+            <input type="text" id="titulo" name="Titulo" class="form-control" value="{{ campanha.Titulo }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="prazo" class="form-label">Prazo</label>
+            <input type="date" id="prazo" name="Prazo" class="form-control" value="{{ campanha.Prazo|date:'Y-m-d' }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="quantidade_cestas" class="form-label">Quantidade de Cestas</label>
+            <input type="number" id="quantidade_cestas" name="Quantidade_Cestas" class="form-control" value="{{ campanha.Quantidade_Cestas }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        <a href="{% url 'campanhas' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
