@@ -20,11 +20,11 @@
                 <tbody>
                     {% for Item in Itens_Cesta %}
                         <tr>
-                            <td>{{ Item.nome }}</td>
+                            <td>{{ Item.Nome }}</td>
                             <td>{{ Item.Quant_padrao }}</td>
                             <td>{{ Item.Quant_Obtida}}</td>
                             <td>
-                                <a href="{% url 'detalhes_Item' Item.ID_Item_Cesta %}" class="btn btn-info btn-sm">Detalhes</a>
+
                                 <a href="{% url 'editar_Item' Item.ID_Item_Cesta %}" class="btn btn-warning btn-sm">Editar</a>
                                 <a href="{% url 'deletar_Item' Item.ID_Item_Cesta %}" class="btn btn-danger btn-sm">Deletar</a>
                             </td>
@@ -35,5 +35,6 @@
         {% else %}
             <p class="text-muted">Nenhum item cadastrado.</p>
         {% endif %}
+        <a href="{% url 'criar_Item' %}" class="btn btn-success mb-3">+ adicionar novo item</a>
     </div>
 {% endblock %}

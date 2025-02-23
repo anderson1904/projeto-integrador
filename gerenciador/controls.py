@@ -55,3 +55,8 @@ def analisar_metas(FIDCampanha: int):
     Campanha.save()
 
     return Campanha.status
+
+def adicionar(id_Item:int):
+    pass
+def reduzir(id_Item:int):
+    pass

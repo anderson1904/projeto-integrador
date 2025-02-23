@@ -8,7 +8,7 @@ from .models import(
     TbAsItem_Modelo,
     TbItem_Cesta,
 )
-from .forms import ModeloCestaForm,CampanhaForm
+from .forms import ModeloCestaForm,CampanhaForm,ItemForm
 from .controls import analisar_metas
 
 #autenticação
@@ -98,6 +98,9 @@ def deletar_campanha(request, campanha_id):
         return redirect("campanhas") 
 
     return render(request, "excluir-campanha.html", {"campanha": campanha})
+
+def atualizar_campanha(request):
+    pass
 #----------------------------------------------------------------------
 
 #CRUD Das Cestas Básicas
@@ -156,6 +159,45 @@ def buscar_Itens(request):
 
     return render(request, 'Estoque.html', {'Itens_Cesta': Itens_Cesta, 'query': query})
 
-def analisar_cestas(request):
-    pass
+def criar_Item(request):
+    if request.method == "POST":
+        form = ItemForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("itens")  # Redireciona para a lista de cestas após criar
+    else:
+        form = ItemForm()
 
+    return render(request, "criar-item.html", {"form": form})
+
+def editar_Item(request,id_item):
+    Item = get_object_or_404(TbItem_Cesta, ID_Item_Cesta = id_item)
+
+    if request.method == "POST":
+        form = ItemForm(request.POST, instance=Item)
+        if form.is_valid():
+            form.save()
+            return redirect("itens")  # Redireciona para a lista de Items após a edição
+    else:
+        form = ItemForm(instance=Item)
+
+    return render(request, "editar-item.html", {"form": form, "Item": Item})
+
+def deletar_Item(request,id_item):
+    Item = get_object_or_404(TbItem_Cesta, ID_Item_Cesta = id_item)
+
+    if request.method == "POST":
+        Item.delete()
+        return redirect("itens")  # Redireciona para a lista após a exclusão
+
+    return render(request, "excluir-item.html", {"Item": Item})
+
+def mudar_quantidade(request):
+    pass
+#----------------------------------------------
+
+#relacionamento da cesta básica com o Item
+def adicionar_item_cesta(request):
+    pass
+def remover_item_cesta(request):
+    pass

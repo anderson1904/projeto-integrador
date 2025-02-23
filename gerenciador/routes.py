@@ -19,5 +19,8 @@ urlpatterns = [
     path('cestas/deletar/<int:cesta_id>/', views.deletar_cesta_basica, name='deletar_Cesta_Basica'),
     #relativo a Itens
     path('Itens/', views.buscar_Itens,name='itens'),
-    
+    path('Itens/criar/',views.criar_Item,name= 'criar_Item'),
+    path('Itens/editar/<int:id_item>',views.editar_Item, name= 'editar_Item'),
+    path('Itens/deletar/<int:id_item>',views.deletar_Item, name= 'deletar_Item'),
+
 ]

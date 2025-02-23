@@ -1,5 +1,5 @@
 from django import forms
-from .models import TbModelo_Cesta, TbCampanhas
+from .models import TbModelo_Cesta, TbCampanhas, TbItem_Cesta
 
 class ModeloCestaForm(forms.ModelForm):
     class Meta:
@@ -7,10 +7,22 @@ class ModeloCestaForm(forms.ModelForm):
         fields = ["nome"]
         labels = {
             "nome": "Nome da Cesta",
-
         }
         widgets = {
             "nome": forms.TextInput(attrs={"class": "form-control"}),
+
+        }
+class ItemForm(forms.ModelForm):
+    class Meta:
+        model = TbItem_Cesta
+        fields = ["Nome", "Quant_padrao"]
+        labels = {
+            "Nome": "nome do item",
+            "Quant_padrao": "quantidade padrão"
+        }
+        widgets = {
+            "Nome": forms.TextInput(attrs={"class": "form-control"}),
+            "Quant_padrao":forms.NumberInput(attrs={"class": "form-control"})
 
         }
 
