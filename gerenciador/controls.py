@@ -30,29 +30,26 @@ def contabilizar_Cesta(FIDCesta: int):
     Modelo_Cesta.Quant_Arrecadadas += quant_Cestas
     Modelo_Cesta.save()
 
-    return Modelo_Cesta.QuantArrecadas
+    return Modelo_Cesta.Quant_Arrecadadas
 
 def analisar_metas(FIDCampanha: int):
     Campanha = TbCampanhas.objects.get(ID_Campanha=FIDCampanha)
     Modelo_Cesta = TbModelo_Cesta.objects.get(id_Cesta=Campanha.Id_Cesta.id_Cesta)
     
-    contabilizar_Cesta(Modelo_Cesta.id_Cesta)
+    contabilizar_Cesta(Modelo_Cesta.id_Cesta)  # Certifique-se que essa função está correta
     meta_cestas = Campanha.Quantidade_Cestas
     estoque_cestas = Modelo_Cesta.Quant_Arrecadadas
 
     if Campanha.Prazo < datetime.now().date():
         Campanha.status = 'atrasada'
 
-    if estoque_cestas >= meta_cestas:
+    if estoque_cestas >= meta_cestas and Campanha.status != 'concluida':
         if Campanha.status == 'atrasada':
             Campanha.status = 'concluida com atraso'
-        if Campanha.status == 'concluida com atraso':
-            pass
-        else:
+        elif Campanha.status != 'concluida com atraso':
             Campanha.status = 'concluida'
 
-        estoque_cestas -= meta_cestas
-        Modelo_Cesta.Quant_Arrecadadas = estoque_cestas
+        Modelo_Cesta.Quant_Arrecadadas = estoque_cestas - meta_cestas
 
     Modelo_Cesta.save()
     Campanha.save()

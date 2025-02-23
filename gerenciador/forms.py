@@ -1,5 +1,5 @@
 from django import forms
-from .models import TbModelo_Cesta
+from .models import TbModelo_Cesta, TbCampanhas
 
 class ModeloCestaForm(forms.ModelForm):
     class Meta:
@@ -13,3 +13,23 @@ class ModeloCestaForm(forms.ModelForm):
             "nome": forms.TextInput(attrs={"class": "form-control"}),
 
         }
+
+class CampanhaForm(forms.ModelForm):
+    #id_Cesta = forms.ModelChoiceField(
+        #queryset=TbModelo_Cesta.objects.all(), 
+        #empty_label="-- Selecione uma Cesta --",
+        #label="Selecionar Cesta Básica"
+    #)
+
+    class Meta:
+        model = TbCampanhas
+        fields = ["Titulo", "Prazo", "Quantidade_Cestas", "Id_Cesta"]
+        widgets = {
+            "Prazo": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
+            "Titulo": forms.TextInput(attrs={"class": "form-control"}),
+            "Quantidade_Cestas": forms.NumberInput(attrs={"class": "form-control"}),
+        }
+    def __init__(self, *args, **kwargs):
+        super(CampanhaForm, self).__init__(*args, **kwargs)
+        self.fields['Id_Cesta'].queryset = TbModelo_Cesta.objects.all()
+        self.fields['Id_Cesta'].label_from_instance = lambda obj: f"{obj.nome} ({obj.Quant_Arrecadadas} arrecadadas)"

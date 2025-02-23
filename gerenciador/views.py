@@ -8,7 +8,7 @@ from .models import(
     TbAsItem_Modelo,
     TbItem_Cesta,
 )
-from .forms import ModeloCestaForm
+from .forms import ModeloCestaForm,CampanhaForm
 from .controls import analisar_metas
 
 #autenticação
@@ -60,10 +60,11 @@ def editar_campanha(request, campanha_id):
         campanha.Titulo = request.POST.get("Titulo")
         campanha.Prazo = request.POST.get("Prazo")
         campanha.Quantidade_Cestas = request.POST.get("Quantidade_Cestas")
+        campanha.status = analisar_metas(campanha.ID_Campanha)
         campanha.save()
         return redirect("campanhas") 
     
-    return render(request, "editar_campanha.html", {"campanha": campanha})
+    return render(request, "editar-campanha.html", {"campanha": campanha})
 
 def buscar_campanhas(request):
     query = request.GET.get('q') 
@@ -75,45 +76,18 @@ def buscar_campanhas(request):
     return render(request, 'campanhas.html', {'campanhas': Campanhas, 'query': query})
 
 def criar_campanha(request, campanha_id=None):
-    campanha = None
-    if campanha_id:
-        campanha = get_object_or_404(TbCampanhas, ID_Campanha=campanha_id)
-
-    cestas = TbModelo_Cesta.objects.all()
-
-    id_cesta = request.POST.get("id_Cesta")
-    if TbModelo_Cesta.objects.filter(id_Cesta=id_cesta).exists():
-        cesta = TbModelo_Cesta.objects.get(id_Cesta=id_cesta)
-    else:
-        cesta = None
+    campanha = get_object_or_404(TbCampanhas, ID_Campanha=campanha_id) if campanha_id else None
 
     if request.method == "POST":
-        titulo = request.POST.get("Titulo")
-        prazo = request.POST.get("Prazo")
-        quantidade_cestas = request.POST.get("Quantidade_Cestas")
-        cesta_id = request.POST.get("id_Cesta")
-        cesta_basica = get_object_or_404(TbModelo_Cesta, id_Cesta=cesta_id)
+        form = CampanhaForm(request.POST, instance=campanha)
+        if form.is_valid():
+            campanha = form.save()
+            campanha.status = analisar_metas(campanha.ID_Campanha)
+            return redirect("campanhas")
+    else:
+        form = CampanhaForm(instance=campanha)
 
-        if campanha:
-            # Atualiza a campanha existente
-            campanha.Titulo = titulo
-            campanha.Prazo = prazo
-            campanha.Quantidade_Cestas = 0
-            campanha.id_Cesta = cesta_basica
-        else:
-            # Cria uma nova campanha
-            campanha = TbCampanhas.objects.create(
-                Titulo=titulo,
-                Prazo=prazo,
-                Quantidade_Cestas=0,
-                id_Cesta=cesta_basica,  # Associando a Cesta Básica corretamente
-                status="em andamento"
-            )
-
-        campanha.save()
-        return redirect("campanhas")  # Redireciona para a lista de campanhas
-
-    return render(request, "criar-campanha.html", {"campanha": campanha, "cestas": cestas})
+    return render(request, "criar-campanha.html", {"form": form})
 
 
 def deletar_campanha(request, campanha_id):

@@ -2,36 +2,12 @@
 
 {% block content %}
 <div class="container">
-    <h2>{% if campanha %}Editar Campanha{% else %}Criar Campanha{% endif %}</h2>
+    <h2>{% if form.instance.pk %}Editar Campanha{% else %}Criar Campanha{% endif %}</h2>
     <form method="POST">
         {% csrf_token %}
-        <div class="mb-3">
-            <label for="titulo" class="form-label">Título</label>
-            <input type="text" id="titulo" name="Titulo" class="form-control" value="{{ campanha.Titulo|default:'' }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="prazo" class="form-label">Prazo</label>
-            <input type="date" id="prazo" name="Prazo" class="form-control" value="{{ campanha.Prazo|date:'Y-m-d'|default:'' }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="quantidade_cestas" class="form-label">Quantidade de Cestas</label>
-            <input type="number" id="quantidade_cestas" name="Quantidade_Cestas" class="form-control" value="{{ campanha.Quantidade_Cestas|default:'' }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="cesta_basica" class="form-label">Selecionar Cesta Básica</label>
-            <select id="cesta_basica" name="id_Cesta" class="form-control" required>
-                <option value="">-- Selecione uma Cesta --</option>
-                {% for cesta in cestas %}
-                    <option value="{{ cesta.ID_Cesta }}" {% if campanha and campanha.Cesta_Basica.ID_Cesta == cesta.ID_Cesta %}selected{% endif %}>
-                        {{ cesta.nome }} ({{ cesta.Quant_Arrecadadas }} arrecadadas)
-                    </option>
-                {% endfor %}
-                </option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">{% if campanha %}Salvar Alterações{% else %}Criar Campanha{% endif %}</button>
+        {{ form.as_p }}  {# Renderiza os campos do formulário automaticamente #}
+        <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Salvar Alterações{% else %}Criar Campanha{% endif %}</button>
         <a href="{% url 'campanhas' %}" class="btn btn-secondary">Cancelar</a>
-        
     </form>
 </div>
 {% endblock %}

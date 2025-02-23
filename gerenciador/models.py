@@ -31,4 +31,4 @@ class TbCampanhas(models.Model):
         ('concluida com atraso', 'Concluída com atraso'),
     ]
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='em andamento')
-    Id_Cesta = models.ForeignKey(TbModelo_Cesta, verbose_name=("Modelo_cesta"), on_delete=models.CASCADE, default=1)
+    Id_Cesta = models.ForeignKey(TbModelo_Cesta, verbose_name=("Modelo_cesta"), on_delete=models.CASCADE)
