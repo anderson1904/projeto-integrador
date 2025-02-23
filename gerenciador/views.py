@@ -99,8 +99,13 @@ def deletar_campanha(request, campanha_id):
 
     return render(request, "excluir-campanha.html", {"campanha": campanha})
 
-def atualizar_campanha(request):
-    pass
+
+def atualizar_status(request, campanha_id):
+    campanha = get_object_or_404(TbCampanhas, ID_Campanha=campanha_id)
+    campanha.status = analisar_metas(campanha.ID_Campanha)
+    campanha.save(update_fields=["status"])
+    
+    return redirect(request.META.get("HTTP_REFERER", "campanhas"))
 #----------------------------------------------------------------------
 
 #CRUD Das Cestas Básicas
@@ -192,8 +197,24 @@ def deletar_Item(request,id_item):
 
     return render(request, "excluir-item.html", {"Item": Item})
 
-def mudar_quantidade(request):
-    pass
+def atualizar_quantidade(request, item_id):
+    item = get_object_or_404(TbItem_Cesta, ID_Item_Cesta=item_id)
+
+    if request.method == "POST":
+        operacao = request.POST.get("operacao")
+        valor = int(request.POST.get("valor", 1))  # Pega o valor do formulário
+
+        if operacao == "adicionar":
+            item.Quant_Obtida += valor
+        elif operacao == "reduzir":
+            if item.Quant_Obtida < valor:
+                return render(request, "atualizar_item.html", {"item": item, "erro": "Não pode reduzir mais do que o disponível"})
+            item.Quant_Obtida -= valor
+
+        item.save(update_fields=["Quant_Obtida"])
+        return redirect("lista_itens")  # Redireciona para a lista
+
+    return render(request, "atualizar-item.html", {"item": item})
 #----------------------------------------------
 
 #relacionamento da cesta básica com o Item

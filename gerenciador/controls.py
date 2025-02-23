@@ -56,7 +56,19 @@ def analisar_metas(FIDCampanha: int):
 
     return Campanha.status
 
-def adicionar(id_Item:int):
-    pass
-def reduzir(id_Item:int):
-    pass
+def adicionar(id_Item: int, valor: int):
+    item = TbItem_Cesta.objects.get(ID_Item_Cesta=id_Item)
+    item.Quant_Obtida += valor
+    item.save(update_fields=["Quant_Obtida"]) 
+    return item.Quant_Obtida
+
+def reduzir(id_Item: int, valor: int):
+    item = TbItem_Cesta.objects.get(ID_Item_Cesta=id_Item)
+    if item.Quant_Obtida < valor:
+        return "A redução não pode ser maior que o valor existente"
+    else:
+        item.Quant_Obtida -= valor
+        item.save(update_fields=["Quant_Obtida"])
+        return item.Quant_Obtida
+
+    

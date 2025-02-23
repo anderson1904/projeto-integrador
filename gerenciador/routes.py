@@ -11,6 +11,7 @@ urlpatterns = [
     path('campanhas/editar/<int:campanha_id>/', views.editar_campanha, name='editar_campanha'),
     path('campanhas/criar/', views.criar_campanha, name='criar_campanha'),
     path('campanhas/deletar/<int:campanha_id>/', views.deletar_campanha, name='deletar_campanha'),
+    path("campanhas/atualizar/<int:campanha_id>/", views.atualizar_status, name="atualizar-status"),
 
     #relativo a Cestas básicas
     path('cestas/', views.buscar_Cestas_Basicas, name='cestas_basicas'),
@@ -22,5 +23,8 @@ urlpatterns = [
     path('Itens/criar/',views.criar_Item,name= 'criar_Item'),
     path('Itens/editar/<int:id_item>',views.editar_Item, name= 'editar_Item'),
     path('Itens/deletar/<int:id_item>',views.deletar_Item, name= 'deletar_Item'),
+    path("item/<int:item_id>/atualizar/", views.atualizar_quantidade, name="atualizar-quantidade"),
+
+
 
 ]

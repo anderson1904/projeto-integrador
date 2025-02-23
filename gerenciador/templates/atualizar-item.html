@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atualizar Item</title>
+</head>
+<body>
+    <h1>Atualizar Quantidade do Item: {{ item.Nome }}</h1>
+    
+    {% if erro %}
+        <p style="color: red;">{{ erro }}</p>
+    {% endif %}
+    
+    <p>Quantidade atual: <strong>{{ item.Quant_Obtida }}</strong></p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="valor">Quantidade:</label>
+        <input type="number" id="valor" name="valor" min="1" value="1" required>
+
+        <button type="submit" name="operacao" value="adicionar">Adicionar</button>
+        <button type="submit" name="operacao" value="reduzir">Reduzir</button>
+    </form>
+
+    <br>
+    <a href="{% url 'itens' %}">Voltar</a>
+</body>
+</html>

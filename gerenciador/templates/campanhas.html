@@ -27,7 +27,7 @@
                             <td>{{ campanha.Quantidade_Cestas }}</td>
                             <td>{{ campanha.status }}</td>
                             <td>
-
+                                <a href="{% url 'atualizar-status' campanha.ID_Campanha %}" class="btn btn-info btn-sm">atualizar</a>
                                 <a href="{% url 'editar_campanha' campanha.ID_Campanha %}" class="btn btn-warning btn-sm">Editar</a>
                                 <a href="{% url 'deletar_campanha' campanha.ID_Campanha %}" class="btn btn-danger btn-sm">Deletar</a>
                             </td>
