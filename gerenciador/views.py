@@ -8,7 +8,7 @@ from .models import(
     TbAsItem_Modelo,
     TbItem_Cesta,
 )
-from .forms import ModeloCestaForm,CampanhaForm,ItemForm
+from .forms import ModeloCestaForm,CampanhaForm,ItemForm, AddItemCestaForm
 from .controls import analisar_metas
 
 #autenticação
@@ -212,13 +212,34 @@ def atualizar_quantidade(request, item_id):
             item.Quant_Obtida -= valor
 
         item.save(update_fields=["Quant_Obtida"])
-        return redirect("lista_itens")  # Redireciona para a lista
+        return redirect("itens")  # Redireciona para a lista
 
     return render(request, "atualizar-item.html", {"item": item})
 #----------------------------------------------
 
 #relacionamento da cesta básica com o Item
-def adicionar_item_cesta(request):
-    pass
-def remover_item_cesta(request):
-    pass
+def adicionar_item_cesta(request, id_Cesta):
+    cesta = get_object_or_404(TbModelo_Cesta, id_Cesta=id_Cesta)
+
+    if request.method == "POST":
+        form = AdicionarItemCestaForm(request.POST)
+        if form.is_valid():
+            item = form.cleaned_data["item"]
+            cesta.Item_e_cesta.add(item)
+            return redirect("itens-da-cesta", id_Cesta=cesta.id_Cesta) 
+
+    else:
+        form = AddItemCestaForm()
+
+    return render(request, "itens-da-cesta.html", {"cesta": cesta, "form": form})
+
+
+def remover_item_cesta(request, id_Cesta, id_Item):
+    cesta = get_object_or_404(TbModelo_Cesta, id_Cesta=id_Cesta)
+    item = get_object_or_404(TbItem_Cesta, ID_Item_Cesta=id_Item)
+
+    if request.method == "POST":
+        cesta.Item_e_cesta.remove(item)
+        return redirect("itens-da-cesta", id_Cesta=cesta.id_Cesta)
+
+    return render(request, "remover-item-cesta.html", {"cesta": cesta, "item": item})

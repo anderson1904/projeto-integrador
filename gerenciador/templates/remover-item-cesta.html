@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remover Item</title>
+</head>
+<body>
+    <h1>Remover Item</h1>
+    <p>Tem certeza que deseja remover "{{ item.Nome }}" da cesta "{{ cesta.nome }}"?</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Confirmar Remoção</button>
+    </form>
+
+    <br>
+    <a href="{% url 'itens-da-cesta' cesta.id_Cesta %}">Cancelar</a>
+</body>
+</html>

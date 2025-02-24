@@ -27,12 +27,6 @@ class ItemForm(forms.ModelForm):
         }
 
 class CampanhaForm(forms.ModelForm):
-    #id_Cesta = forms.ModelChoiceField(
-        #queryset=TbModelo_Cesta.objects.all(), 
-        #empty_label="-- Selecione uma Cesta --",
-        #label="Selecionar Cesta Básica"
-    #)
-
     class Meta:
         model = TbCampanhas
         fields = ["Titulo", "Prazo", "Quantidade_Cestas", "Id_Cesta"]
@@ -45,3 +39,10 @@ class CampanhaForm(forms.ModelForm):
         super(CampanhaForm, self).__init__(*args, **kwargs)
         self.fields['Id_Cesta'].queryset = TbModelo_Cesta.objects.all()
         self.fields['Id_Cesta'].label_from_instance = lambda obj: f"{obj.nome} ({obj.Quant_Arrecadadas} arrecadadas)"
+
+class AddItemCestaForm(forms.Form):
+    item = forms.ModelChoiceField(
+        queryset=TbItem_Cesta.objects.all(),
+        label="Escolha um item para adicionar",
+        widget=forms.Select(attrs={"class": "form-control"}),
+    )
