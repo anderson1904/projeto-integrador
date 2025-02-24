@@ -222,7 +222,7 @@ def adicionar_item_cesta(request, id_Cesta):
     cesta = get_object_or_404(TbModelo_Cesta, id_Cesta=id_Cesta)
 
     if request.method == "POST":
-        form = AdicionarItemCestaForm(request.POST)
+        form = AddItemCestaForm(request.POST)
         if form.is_valid():
             item = form.cleaned_data["item"]
             cesta.Item_e_cesta.add(item)

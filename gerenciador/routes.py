@@ -21,7 +21,7 @@ urlpatterns = [
 
     #relacionamento de cestas básicas com campanha
     path("cestas/<int:id_Cesta>/editar/", views.adicionar_item_cesta, name="itens-da-cesta"),
-    path("cesta/<int:id_Cesta>/remover/<int:id_Item>/", views.remover_item_cesta, name="remover_item_cesta"),
+    path("cestas/<int:id_Cesta>/remover/<int:id_Item>/", views.remover_item_cesta, name="remover_item_cesta"),
     #relativo a Itens
     path('Itens/', views.buscar_Itens,name='itens'),
     path('Itens/criar/',views.criar_Item,name= 'criar_Item'),
