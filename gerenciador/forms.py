@@ -1,5 +1,5 @@
 from django import forms
-from .models import TbModelo_Cesta, TbCampanhas, TbItem_Cesta
+from .models import TbModelo_Cesta, TbCampanhas, TbItem_Cesta, TbAsItem_Modelo
 
 class ModeloCestaForm(forms.ModelForm):
     class Meta:
@@ -38,11 +38,16 @@ class CampanhaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CampanhaForm, self).__init__(*args, **kwargs)
         self.fields['Id_Cesta'].queryset = TbModelo_Cesta.objects.all()
-        self.fields['Id_Cesta'].label_from_instance = lambda obj: f"{obj.nome} ({obj.Quant_Arrecadadas} arrecadadas)"
+        self.fields['Id_Cesta'].label_from_instance = (
+            lambda obj: f"{obj.nome} ({obj.Quant_Arrecadadas} arrecadadas)"
+            )
 
 class AddItemCestaForm(forms.Form):
-    item = forms.ModelChoiceField(
-        queryset=TbItem_Cesta.objects.all(),
-        label="Escolha um item para adicionar",
-        widget=forms.Select(attrs={"class": "form-control"}),
-    )
+        item = forms.ModelChoiceField(
+            queryset=TbItem_Cesta.objects.all(),
+            label="Escolha um item para adicionar",
+            widget=forms.Select(attrs={"class": "form-control"}),
+        )
+        def __init__(self, *args, **kwargs):
+            super(AddItemCestaForm, self).__init__(*args, **kwargs)
+            self.fields['item'].label_from_instance = lambda obj: f"{obj.Nome}: {obj.Quant_padrao} (Obtidas: {obj.Quant_Obtida})"

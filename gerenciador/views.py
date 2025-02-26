@@ -71,7 +71,7 @@ def buscar_campanhas(request):
     Campanhas = TbCampanhas.objects.all()  
 
     if query:
-        Campanhas = Campanhas.filter(name__icontains=query) 
+        Campanhas = Campanhas.filter(Titulo__icontains=query) 
 
     return render(request, 'campanhas.html', {'campanhas': Campanhas, 'query': query})
 
@@ -114,7 +114,7 @@ def buscar_Cestas_Basicas(request):
     Cestas_Basicas = TbModelo_Cesta.objects.all()  
 
     if query:
-        Cestas_Basicas = Cestas_Basicas.filter(name__icontains=query) 
+        Cestas_Basicas = Cestas_Basicas.filter(nome__icontains=query) 
 
     return render(request, 'Cestas-Basicas.html', {'Cestas_Basicas': Cestas_Basicas, 'query': query})
 
@@ -152,6 +152,12 @@ def deletar_cesta_basica(request, cesta_id):
 
     return render(request, "excluir-cesta-basica.html", {"cesta": cesta})
 
+def atualizar_cesta_basica(request, cesta_id):
+    cesta = get_object_or_404(Tbcestas, ID_cesta=cesta_id)
+    cesta.Quant_Arrecadadas = analisar_metas(cesta.ID_cesta)
+    cesta.save(update_fields=["Quant_Arrecadadas"])
+    
+    return redirect(request.META.get("HTTP_REFERER", "cestas_basicas"))
 #------------------------------------------------------------------------
 
 #CRUD dos Itens
@@ -160,7 +166,7 @@ def buscar_Itens(request):
     Itens_Cesta = TbItem_Cesta.objects.all()  
 
     if query:
-        Itens_Cesta = Itens_Cesta.filter(name__icontains=query) 
+        Itens_Cesta = Itens_Cesta.filter(Nome__icontains=query) 
 
     return render(request, 'Estoque.html', {'Itens_Cesta': Itens_Cesta, 'query': query})
 
@@ -232,7 +238,6 @@ def adicionar_item_cesta(request, id_Cesta):
         form = AddItemCestaForm()
 
     return render(request, "itens-da-cesta.html", {"cesta": cesta, "form": form})
-
 
 def remover_item_cesta(request, id_Cesta, id_Item):
     cesta = get_object_or_404(TbModelo_Cesta, id_Cesta=id_Cesta)
