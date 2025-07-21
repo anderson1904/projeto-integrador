@@ -1,35 +1,39 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Cesta</title>
-</head>
-<body>
-    <h1>Editar Cesta: {{ cesta.nome }}</h1>
-    
-    <h2>Itens da Cesta</h2>
-    <ul>
-        {% for item in cesta.Item_e_cesta.all %}
-            <li>
-                {{ item.Nome }}
-                <form method="POST" action="{% url 'remover_item_cesta' cesta.id_Cesta item.ID_Item_Cesta %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit">Remover</button>
-                </form>
-            </li>
-        {% endfor %}
-    </ul>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Editar Cesta: {{ cesta.nome }}</h2>
 
-    <h2>Adicionar Item</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Adicionar</button>
-    </form>
+            <h4>Itens da Cesta</h4>
+            {% if cesta.Item_e_cesta.all %}
+                <ul class="list-group mb-4">
+                    {% for item in cesta.Item_e_cesta.all %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ item.Nome }}
+                            <form method="POST" action="{% url 'remover_item_cesta' cesta.id_Cesta item.ID_Item_Cesta %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">Remover</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">Nenhum item nesta cesta ainda.</p>
+            {% endif %}
 
-    <br>
-    <a href="{% url 'cestas_basicas' %}">Voltar para a lista</a>
-</body>
+            <h4 class="mt-4">Adicionar Item</h4>
+            <form method="POST" class="mt-2">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Adicionar</button>
+            </form>
+
+            <div class="mt-4">
+                <a href="{% url 'cestas_basicas' %}" class="btn btn-secondary">Voltar para a lista</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
