@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class TbItem_Cesta(models.Model):
@@ -32,3 +33,11 @@ class TbCampanhas(models.Model):
     ]
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='em andamento')
     Id_Cesta = models.ForeignKey(TbModelo_Cesta, verbose_name=("Modelo_cesta"), on_delete=models.CASCADE)
+
+class TbDonation(models.Model):
+    id_Donation = models.AutoField(primary_key= True, null= False)
+    quantidade = models.PositiveIntegerField(null= False)
+    Validade = models.DateField(null= False)
+    confirmado = models.BooleanField(null= False, default= False)
+    id_Item_Cesta= models.ForeignKey(TbItem_Cesta, verbose_name=("Item"), on_delete=models.CASCADE)
+    id_User = models.ForeignKey(User, verbose_name=("Usuario"), on_delete=models.CASCADE)

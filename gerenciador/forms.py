@@ -1,5 +1,5 @@
 from django import forms
-from .models import TbModelo_Cesta, TbCampanhas, TbItem_Cesta, TbAsItem_Modelo
+from .models import TbModelo_Cesta, TbCampanhas, TbItem_Cesta, TbAsItem_Modelo, TbDonation
 
 class ModeloCestaForm(forms.ModelForm):
     class Meta:
@@ -51,3 +51,17 @@ class AddItemCestaForm(forms.Form):
         def __init__(self, *args, **kwargs):
             super(AddItemCestaForm, self).__init__(*args, **kwargs)
             self.fields['item'].label_from_instance = lambda obj: f"{obj.Nome}: {obj.Quant_padrao} (Obtidas: {obj.Quant_Obtida})"
+
+class DonationForm(forms.ModelForm):
+    class Meta:
+        model = TbDonation
+        fields = ['quantidade', 'Validade', 'confirmado', 'id_Item_Cesta']
+        widgets = {
+            'Validade': forms.DateInput(attrs={'type': 'date'}),
+        }
+    def __init__(self, *args, **kwargs):
+        super(DonationForm, self).__init__(*args, **kwargs)
+        self.fields['id_Item_Cesta'].queryset = TbModelo_Cesta.objects.all()
+        self.fields['id_Item_Cesta'].label_from_instance = (
+            lambda obj: f"{obj.nome}"
+            )

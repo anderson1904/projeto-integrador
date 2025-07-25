@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Editar usuario</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">Título</label>
+            <input type="text" id="username" name="username" class="form-control" value="{{ usuario.username }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="is_superuser" class="form-label">é administrador? ("False" = Não e "True" = Sim)</label>
+            <input type="text" id="is_superuser" name="is_superuser" class="form-control" value="{{ usuario.is_superuser }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="is_staff" class="form-label">é voluntário? ("False" = Não e "True" = Sim)</label>
+            <input type="text" id="is_staff" name="is_staff" class="form-control" value="{{ usuario.is_staff }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="is_active" class="form-label">manter ativado? ("False" = Não e "True" = Sim)</label>
+            <input type="text" id="is_active" name="is_active" class="form-control" value="{{ usuario.is_active }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        <a href="{% url 'usuarios' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

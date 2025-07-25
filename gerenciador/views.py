@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
+from django.contrib.auth.models import User
 from .models import(
     TbCampanhas,
     TbModelo_Cesta,
@@ -12,6 +13,7 @@ from .forms import ModeloCestaForm,CampanhaForm,ItemForm, AddItemCestaForm
 from .controls import analisar_metas
 
 #autenticação
+
 def registro(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -52,6 +54,32 @@ def logout_view(request):
     return redirect('login')
 #------------------------------------------------------------------------
 #CRUD das Campanhas
+
+
+#------------------------------------------------------------------------
+#CRUD das Campanhas
+def editar_usuario(request, usuario_id):
+    usuario = get_object_or_404(User, id=usuario_id)
+    
+    if request.method == "POST":
+        usuario.usename = request.POST.get("usename")
+        usuario.is_staff = request.POST.get("is_staff")
+        usuario.is_active = request.POST.get("is_active")
+        usuario.is_superuser = request.POST.get("is_superuser")
+        usuario.save()
+        return redirect("usuarios") 
+    
+    return render(request, "editar-usuario.html", {"usuario": usuario})
+
+def buscar_usuarios(request):
+    query = request.GET.get('q') 
+    usuarios = User.objects.all()  
+
+    if query:
+        usuarios = usuarios.filter(username__icontains=query) 
+
+    return render(request, 'usuarios.html', {'usuarios': usuarios, 'query': query})
+
 
 def editar_campanha(request, campanha_id):
     campanha = get_object_or_404(TbCampanhas, ID_Campanha=campanha_id)
@@ -248,3 +276,27 @@ def remover_item_cesta(request, id_Cesta, id_Item):
         return redirect("itens-da-cesta", id_Cesta=cesta.id_Cesta)
 
     return render(request, "remover-item-cesta.html", {"cesta": cesta, "item": item})
+
+#doações
+#listar doações
+def buscar_donations(request):
+    query = request.GET.get('q')
+    doacoes = TbDonation.objects.select_related('id_Item_Cesta', 'id_User').all()
+
+    if query:
+        doacoes = doacoes.filter(id_Item_Cesta__Nome__icontains=query)
+
+    return render(request, 'doacoes.html', {'doacoes': doacoes, 'query': query})
+#fazer doação
+def donate(request):
+    if request.method == "POST":
+        form = TbDonationForm(request.POST)
+        if form.is_valid():
+            doacao = form.save(commit=False)
+            doacao.id_User = request.user  # Associa o usuário logado
+            doacao.save()
+            return redirect("listar_doacoes")  # Redireciona após salvar (ajuste a URL conforme seu projeto)
+    else:
+        form = TbDonationForm()
+
+    return render(request, "criar-doacao.html", {"form": form})

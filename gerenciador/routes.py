@@ -2,9 +2,12 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    #rotas relativas a usuários
     path('registro/', views.registro, name='registro'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
+    path('usuarios/', views.buscar_usuarios, name='usuarios'),
+    path('usuarios/editar/<int:usuario_id>/', views.editar_usuario, name='editar_usuario'),
 
     # rotas relativas as campanhas
     path('campanhas/', views.buscar_campanhas, name='campanhas'),
