@@ -31,7 +31,10 @@ urlpatterns = [
     path('Itens/editar/<int:id_item>',views.editar_Item, name= 'editar_Item'),
     path('Itens/deletar/<int:id_item>',views.deletar_Item, name= 'deletar_Item'),
     path("item/<int:item_id>/atualizar/", views.atualizar_quantidade, name="atualizar-quantidade"),
-
+    # relativo a Doações
+    path('doacoes/', views.buscar_donations, name='buscar_doacoes'),
+    path('doacoes/criar/', views.donate, name='criar_doacao'),
+    path('doacoes/confirmar/<int:id>/', views.confirmar_donate, name='confirmar_doacao'),
 
 
 ]

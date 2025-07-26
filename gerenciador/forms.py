@@ -43,6 +43,7 @@ class CampanhaForm(forms.ModelForm):
             )
 
 class AddItemCestaForm(forms.Form):
+    class Meta:
         item = forms.ModelChoiceField(
             queryset=TbItem_Cesta.objects.all(),
             label="Escolha um item para adicionar",
@@ -61,7 +62,7 @@ class DonationForm(forms.ModelForm):
         }
     def __init__(self, *args, **kwargs):
         super(DonationForm, self).__init__(*args, **kwargs)
-        self.fields['id_Item_Cesta'].queryset = TbModelo_Cesta.objects.all()
+        self.fields['id_Item_Cesta'].queryset = TbItem_Cesta.objects.all()
         self.fields['id_Item_Cesta'].label_from_instance = (
-            lambda obj: f"{obj.nome}"
+            lambda obj: f"{obj.Nome}"
             )

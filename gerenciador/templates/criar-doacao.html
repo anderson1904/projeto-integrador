@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Registrar Doação</h2>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="{{ form.id_Item_Cesta.id_for_label }}">Item da Cesta</label>
+            {{ form.id_Item_Cesta}}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.quantidade.id_for_label }}">Quantidade</label>
+            {{ form.quantidade}}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.Validade.id_for_label }}">Validade</label>
+            {{ form.Validade}}
+        </div>
+
+        {# Campo 'confirmado' opcional no formulário. Pode omitir aqui se só voluntários devem ver/editar. #}
+        {% if user.is_staff %}
+        <div class="form-check mb-3">
+            {{ form.confirmado }}
+            <label class="form-check-label" for="{{ form.confirmado.id_for_label }}">Confirmado</label>
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary">Salvar Doação</button>
+        <a href="{% url 'buscar_doacoes' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

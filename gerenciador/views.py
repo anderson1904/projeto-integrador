@@ -8,8 +8,9 @@ from .models import(
     TbModelo_Cesta,
     TbAsItem_Modelo,
     TbItem_Cesta,
+    TbDonation
 )
-from .forms import ModeloCestaForm,CampanhaForm,ItemForm, AddItemCestaForm
+from .forms import ModeloCestaForm,CampanhaForm,ItemForm, AddItemCestaForm, DonationForm
 from .controls import analisar_metas
 
 #autenticação
@@ -53,16 +54,12 @@ def logout_view(request):
     messages.info(request, 'Você foi deslogado com sucesso.')
     return redirect('login')
 #------------------------------------------------------------------------
-#CRUD das Campanhas
-
-
-#------------------------------------------------------------------------
-#CRUD das Campanhas
+#CRUD dos Usuarios
 def editar_usuario(request, usuario_id):
     usuario = get_object_or_404(User, id=usuario_id)
     
     if request.method == "POST":
-        usuario.usename = request.POST.get("usename")
+        usuario.username = request.POST.get("username")
         usuario.is_staff = request.POST.get("is_staff")
         usuario.is_active = request.POST.get("is_active")
         usuario.is_superuser = request.POST.get("is_superuser")
@@ -80,7 +77,8 @@ def buscar_usuarios(request):
 
     return render(request, 'usuarios.html', {'usuarios': usuarios, 'query': query})
 
-
+#------------------------------------------------------------------------
+#CRUD das Campanhas
 def editar_campanha(request, campanha_id):
     campanha = get_object_or_404(TbCampanhas, ID_Campanha=campanha_id)
     
@@ -258,7 +256,7 @@ def adicionar_item_cesta(request, id_Cesta):
     if request.method == "POST":
         form = AddItemCestaForm(request.POST)
         if form.is_valid():
-            item = form.cleaned_data["item"]
+            item = form.cleaned_data["ID_Item_Cesta"]
             cesta.Item_e_cesta.add(item)
             return redirect("itens-da-cesta", id_Cesta=cesta.id_Cesta) 
 
@@ -286,17 +284,25 @@ def buscar_donations(request):
     if query:
         doacoes = doacoes.filter(id_Item_Cesta__Nome__icontains=query)
 
-    return render(request, 'doacoes.html', {'doacoes': doacoes, 'query': query})
+    return render(request, 'donations.html', {'doacoes': doacoes, 'query': query})
 #fazer doação
 def donate(request):
     if request.method == "POST":
-        form = TbDonationForm(request.POST)
+        form = DonationForm(request.POST)
         if form.is_valid():
             doacao = form.save(commit=False)
             doacao.id_User = request.user  # Associa o usuário logado
             doacao.save()
-            return redirect("listar_doacoes")  # Redireciona após salvar (ajuste a URL conforme seu projeto)
+            return redirect("buscar_doacoes")  # Redireciona após salvar (ajuste a URL conforme seu projeto)
     else:
-        form = TbDonationForm()
+        form = DonationForm()
 
     return render(request, "criar-doacao.html", {"form": form})
+
+def confirmar_donate(request, id):
+    doacao = get_object_or_404(TbDonation, id_Donation=id)
+    if request.method == "POST":
+        doacao.confirmado = True
+        doacao.save(update_fields=["confirmado"])
+        messages.success(request, "Doação confirmada com sucesso!")
+    return redirect("buscar_doacoes")  # Redireciona para a lista de doações

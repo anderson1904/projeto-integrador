@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Doações</h2>
+
+    <form method="get" action="{% url 'buscar_doacoes' %}">
+        <input type="text" name="q" placeholder="Buscar por item doado" value="{{ query }}">
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if doacoes %}
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Usuário</th>
+                    <th>Quantidade</th>
+                    <th>Validade</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in doacoes %}
+                    <tr>
+                        <td>{{ doacoes.id_Item_Cesta.Nome }}</td>
+                        <td>{{ doacoes.id_User.username }}</td>
+                        <td>{{ doacoes.quantidade }}</td>
+                        <td>{{ doacoes.Validade|date:"d/m/Y" }}</td>
+                        <td>
+                            {% if doacoes.confirmado %}
+                                <span class="text-success">Confirmado</span>
+                            {% else %}
+                                <span class="text-warning">Pendente</span>
+                            {% endif %}
+                        </td>
+                        {% if user.is_staff %}
+                            <td>
+                                {% if not doacoes.confirmado %}
+                                    <a href="{% url 'confirmar_doacao' doacoes.id_Donation %}" class="btn btn-success btn-sm">Confirmar</a>
+                                {% else %}
+                                    <span class="text-muted">Já confirmada</span>
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">Nenhuma doação encontrada.</p>
+    {% endif %}
+
+    <a href="{% url 'criar_doacao' %}" class="btn btn-primary mt-3">+ Registrar nova doação</a>
+</div>
+{% endblock %}
